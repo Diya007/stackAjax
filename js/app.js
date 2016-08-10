@@ -102,25 +102,23 @@ $(".inspiration-getter").submit(function(e){
 	e.preventDefault();
 	$(".results").html("");
 	//给输入的内容一个name
-	var keyWords = $(this).find("input[name='keyWords']").val();
+	var keyWords = $(this).find("input[name='answerers']").val();
+	console.log(keyWords)
 	getInspired(keyWords);
 })
 
 function getInspired(keyWords){
-	var tags={
-		tagged:keyWords,
-		required:"top-answerers",
-		period:"all_time?",
-		site:"stackoverflow",
-	}
+
+	var url = "http://api.stackexchange.com/2.2/tags/"+keyWords+"/top-answerers/all_time?site=stackoverflow"
+	var tag = keyWords
 
 	var myRequest = $.ajax({
-			url: "http://api.stackexchange.com/2.2/tags",
-			data: tags,
-			dataType: "json",//use jsonp to avoid cross origin issue
+			url: url,
+			dataType: "json"//use jsonp to avoid cross origin issue
 		})
 	.done(function(result1){
-		var search=showSearch(tags.tagged,result1.items.length);
+		console.log(result1)
+		var search=showSearch(keyWords,result1.items.length);
 		$('.search-results').html(search);
 		$.each(result1.items, function(i, item) {
 			var answerers = showAnswer(item);
@@ -144,13 +142,13 @@ function showAnswer(answer){
 	var result2=$('.templates .answer').clone();
 
 	var reputationElem = result2.find('.reputation')
-	reputationElem.text(answer.reputation);
+	reputationElem.text(answer.user.reputation);
 
 	var view = result2.find('.count');
 	view.text(answer.post_count);
 
 	var answerer = result2.find('.answerer');
-	answerer.text(answer.display_name);
+	answerer.text(answer.user.display_name);
 
 	return result2;
 }
