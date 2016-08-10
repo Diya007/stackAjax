@@ -97,8 +97,6 @@ $(document).ready( function() {
 
 
 
-
-
 //click submit button 
 $(".inspiration-getter").submit(function(e){
 	e.preventDefault();
